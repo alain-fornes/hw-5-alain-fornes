@@ -1,0 +1,82 @@
+---
+title: "STA 313 - Spring 2026 - HW 5"
+subtitle: "Mirror mirror on the wall..."
+author: "INSERT YOUR NAME HERE"
+format: html
+engine: knitr
+toc: true
+---
+
+## Part 1 - Who’s the happiest of them all?
+
+### Question 1 
+
+**The data.**
+
+```{r}
+#| label: include-data-prep-r-script
+#| eval: false
+#| file: data/data-prep.R
+```
+
+### Question 2
+
+**The visualization.** 
+
+```{r}
+#| label: load-packages-r
+#| message: false
+# add code to load packages in R here
+```
+
+```{r}
+#| label: load-data-r
+#| message: false
+# add code to read data in R here
+```
+
+Add code cells and narrative as needed.
+
+### Question 3
+
+**The app.** 
+
+```{r}
+#| label: include-app-r-script
+#| eval: false
+#| file: app/app.R
+```
+
+Add link to your app on Posit Connect Cloud and narrative here.
+
+## Part 2 - Who’s the ugliest of them all?
+
+### Question 4
+
+**Ugly, but in R.** 
+
+```{r}
+#| label: ugly-plot-r
+# add code to make the plot in R here
+```
+
+### Question 5
+
+**Ugly, but in Python.** 
+
+```{python}
+#| label: load-packages-py
+#| message: false
+# add code to import packages in Python here
+```
+
+```{python}
+#| label: load-data-py
+#| message: false
+# add code to read data in Python here
+```
+
+```{python}
+#| label: ugly-plot-py
+# add code to make the plot in Python here
+```

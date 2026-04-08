@@ -1,0 +1,59 @@
+on: push
+name: Check Assignment
+jobs:
+  check-allowed-files:
+    runs-on: self-hosted
+    container:
+      image: ghcr.io/dukestatsci/r_gh_actions:latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Check Files
+      run: |
+        checklist::quit_on_failure({
+          checklist::check_allowed_files(
+            c("hw-5.qmd", "README.md", "data/*", 
+              "app/*", "images/*", ".vscode/*", 
+              "*.ttf", ".python-version", "pyproject.toml")
+          )
+        })
+      shell: Rscript {0}
+
+  check-renders:
+    runs-on: self-hosted
+    container:
+      image: ghcr.io/dukestatsci/r_gh_actions:latest
+    steps:
+    - name: Remove old artifacts
+      uses: c-hive/gha-remove-artifacts@v1
+      with:
+        age: '0 seconds' # parsed by Moment.js
+        skip-tags: false
+        skip-recent: 0
+    - name: Checkout
+      uses: actions/checkout@master
+    - name: Initialize uv
+      run: |
+        uv sync
+    - name: Install known missing packages
+      run: |
+        pak::pak(c("ggtext", "scales", "glue", "ggimage", "reticulate"))
+      shell: Rscript {0}
+    - name: Check Renders (gfm)
+      run: |
+        checklist::check_qmd_renders("hw-5.qmd", install_missing = TRUE, output_format = "gfm", quarto_args = c("-M 'fig-dpi:300'"))
+      shell: Rscript {0}
+    - name: Check Renders (html)
+      run: |
+        checklist::check_qmd_renders("hw-5.qmd", install_missing = TRUE, quarto_args = c("--embed-resources"))
+      shell: Rscript {0}
+    - name: Create artifact (md)
+      uses: actions/upload-artifact@v6
+      with:
+        name: hw-5-md
+        path: hw-5.md
+    - name: Create artifact (html)
+      uses: actions/upload-artifact@v6
+      with:
+        name: hw-5-html
+        path: hw-5.html
