@@ -34,19 +34,21 @@ jobs:
       uses: actions/checkout@master
     - name: Initialize uv
       run: |
-        uv sync
+        uv sync --active
     - name: Install known missing packages
       run: |
         pak::pak(c("ggtext", "scales", "glue", "ggimage", "reticulate"))
       shell: Rscript {0}
-    - name: Check Renders (gfm)
+    - name: Install other missing pkgs
       run: |
-        checklist::check_qmd_renders("hw-5.qmd", install_missing = TRUE, output_format = "gfm", quarto_args = c("-M 'fig-dpi:300'"))
+        checklist::install_missing_pkgs()
       shell: Rscript {0}
-    - name: Check Renders (html)
+    - name: Render (gfm)
       run: |
-        checklist::check_qmd_renders("hw-5.qmd", install_missing = TRUE, quarto_args = c("--embed-resources"))
-      shell: Rscript {0}
+        uv run quarto render hw-5.qmd --execute --to gfm
+    - name: Render (html)
+      run: |
+        uv run quarto render hw-5.qmd --execute --to html --embed-resources
     - name: Create artifact (md)
       uses: actions/upload-artifact@v6
       with:
