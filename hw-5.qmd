@@ -130,7 +130,12 @@ Figure 2.1 from the report.
 #| file: app/app.R
 ```
 
-Add link to your app on Posit Connect Cloud and narrative here.
+**AI reference disclosure**
+I asked it to help write code to answer the question.
+https://chatgpt.com/share/69e65ddf-abf4-83ea-baa6-272523a5d30d
+
+**Non-AI reference disclosure**
+Figure 2.1 from the report.
 
 ## Part 2 - Who’s the ugliest of them all?
 
