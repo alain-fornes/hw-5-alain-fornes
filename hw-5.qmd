@@ -148,26 +148,178 @@ https://docs.posit.co/connect-cloud/user/account/github.html
 
 ```{r}
 #| label: ugly-plot-r
-# add code to make the plot in R here
+three_countries <- whr |>
+  filter(country %in% c("Finland", "United States", "Afghanistan"))
+
+ggplot(three_countries, aes(x = year, y = life_eval, color = country)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks = unique(three_countries$year)) +
+  labs(
+    title = "Life evaluation over time for three countries",
+    x = "Year",
+    y = "Life evaluation score",
+    color = "Country"
+  ) +
+  theme_minimal()
 ```
+
+```{r}
+#| label: q4-ugly-plot
+
+ggplot(three_countries, aes(x = year, y = life_eval, color = country)) +
+  geom_line() +
+  geom_point(aes(shape = country), size = 5) +
+  scale_color_manual(values = c("red", "limegreen", "purple")) +
+  labs(
+    title = "HAPPINESS GRAPH!",
+    subtitle = "COMPARISON of HapPiness OVER TIME!!!!!!!!!",
+    x = "YEAR OF OBSERVATION (missing 2013 for som reason)",
+    y = "LIFE EVALUATION (3-YEAR AVERAGE) SCORING!!!!",
+    color = "WHICH COUNTRY??",
+    shape = "COUNTRY AGAIN!!!"
+  ) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(size = 22, face = "bold.italic", hjust = 0.5, color = "blue"),
+    plot.subtitle = element_text(size = 14, face = "italic", color = "darkorange"),
+    axis.title = element_text(size = 16, face = "bold", color = "darkred"),
+    axis.text.x = element_text(angle = 60, hjust = 1, size = 12, color = "magenta"),
+    axis.text.y = element_text(size = 12, color = "forestgreen"),
+    legend.position = "bottom",
+    legend.title = element_text(size = 14, face = "bold"),
+    legend.text = element_text(size = 12),
+    panel.background = element_rect(fill = "lightyellow"),
+    plot.background = element_rect(fill = "lightpink"),
+    panel.grid.major = element_line(color = "cyan", linewidth = 1),
+    panel.grid.minor = element_line(color = "orange", linewidth = 0.8)
+  )
+```
+
+**AI reference disclosure**
+I asked it to help write code to answer the question.
+https://chatgpt.com/share/69e67e5c-2090-83ea-ba1d-56e851c0a307
+
+**Non-AI reference disclosure**
+I did not use a Non-AI reference to answer this question.
 
 ### Question 5
 
 **Ugly, but in Python.** 
 
+```{r}
+#| label: py-setup
+#| include: false
+
+library(reticulate)
+
+py <- normalizePath("./.venv/bin/python", mustWork = TRUE)
+Sys.setenv(RETICULATE_PYTHON = py)
+use_python(py, required = TRUE)
+py_config()
+```
+
 ```{python}
 #| label: load-packages-py
 #| message: false
-# add code to import packages in Python here
+
+import pandas as pd
+import plotnine as p9
 ```
 
 ```{python}
 #| label: load-data-py
 #| message: false
-# add code to read data in Python here
+
+whr = pd.read_csv("data/whr.csv")
+
+three_countries = whr[whr["country"].isin(["Finland", "United States", "Afghanistan"])].copy()
+year_breaks = sorted(three_countries["year"].unique())
+```
+
+
+```{python}
+#| label: pretty-plot-py
+
+(
+    p9.ggplot(three_countries, p9.aes(x="year", y="life_eval", color="country"))
+    + p9.geom_line()
+    + p9.geom_point()
+    + p9.scale_x_continuous(breaks=year_breaks)
+    + p9.labs(
+        title="Life evaluation over time for three countries",
+        x="Year",
+        y="Life evaluation score",
+        color="Country"
+    )
+    + p9.theme_minimal()
+    + p9.theme(
+        figure_size=(8, 5),
+        axis_text_x=p9.element_text(size=8)
+    )
+)
 ```
 
 ```{python}
 #| label: ugly-plot-py
-# add code to make the plot in Python here
+
+(
+    p9.ggplot(three_countries, p9.aes(x="year", y="life_eval", color="country"))
+    + p9.geom_line()
+    + p9.geom_point(p9.aes(shape="country"), size=4.5)
+    + p9.scale_x_continuous(breaks=year_breaks)
+    + p9.scale_color_manual(values=["red", "limegreen", "purple"])
+    + p9.labs(
+        title="HAPPINESS GRAPH!",
+        subtitle="COMPARISON of HapPiness OVER TIME!!!!!!!!!",
+        x="YEAR OF OBSERVATION (missing 2013 for som reason)",
+        y="LIFE EVALUATION (3-YEAR AVERAGE) SCORING!!!!",
+        color="WHICH COUNTRY??",
+        shape="COUNTRY AGAIN!!!"
+    )
+    + p9.theme_bw()
+    + p9.theme(
+        figure_size=(2, 7),
+        plot_title=p9.element_text(
+            size=16, weight="bold", style="italic", ha="center", color="blue"
+        ),
+        plot_subtitle=p9.element_text(
+            size=11, style="italic", color="darkorange"
+        ),
+        axis_title=p9.element_text(
+            size=11, weight="bold", color="darkred"
+        ),
+        axis_text_x=p9.element_text(
+            rotation=60, ha="right", size=9, color="magenta"
+        ),
+        axis_text_y=p9.element_text(
+            size=9, color="forestgreen"
+        ),
+        legend_position="bottom",
+        legend_title=p9.element_text(
+            size=10, weight="bold"
+        ),
+        legend_text=p9.element_text(
+            size=9
+        ),
+        panel_background=p9.element_rect(fill="lightyellow"),
+        plot_background=p9.element_rect(fill="lightpink"),
+        panel_grid_major=p9.element_line(color="cyan", size=0.8),
+        panel_grid_minor=p9.element_line(color="orange", size=0.6),
+        subplots_adjust={
+            "left": 0.22,
+            "right": 0.98,
+            "bottom": 0.32,
+            "top": 0.88
+        }
+    )
+)
 ```
+
+I was able to almost create full replicas of the plots built in R, save a few issues. First, the quality of the renders is not the same, with some words being a bit more pixelated in the python plots. Also, The legend on the second plot (the ugly one) was impossible to make fit withing the pink box. I tried using many online resources but nothing I found could help me make the legend not span the entirety of the render.
+
+**AI reference disclosure**
+I did not use AI references for this part of the assignment
+
+**Non AI reference disclosure**
+https://plotnine.org/
