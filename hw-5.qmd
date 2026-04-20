@@ -124,6 +124,9 @@ Figure 2.1 from the report.
 
 **The app.** 
 
+**App Link**
+https://connect.posit.cloud/alain-fornes/content/019dac51-4b0c-2c68-f08d-8ea3b3806a24
+
 ```{r}
 #| label: include-app-r-script
 #| eval: false
@@ -132,10 +135,10 @@ Figure 2.1 from the report.
 
 **AI reference disclosure**
 I asked it to help write code to answer the question.
-https://chatgpt.com/share/69e65ddf-abf4-83ea-baa6-272523a5d30d
+https://chatgpt.com/share/69e67840-1314-83ea-9c69-8b27e699aeb6
 
 **Non-AI reference disclosure**
-Figure 2.1 from the report.
+https://docs.posit.co/connect-cloud/user/account/github.html
 
 ## Part 2 - Who’s the ugliest of them all?
 
