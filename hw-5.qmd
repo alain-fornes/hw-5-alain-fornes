@@ -1,7 +1,7 @@
 ---
 title: "STA 313 - Spring 2026 - HW 5"
 subtitle: "Mirror mirror on the wall..."
-author: "INSERT YOUR NAME HERE"
+author: "Alain Fornes"
 format: html
 engine: knitr
 toc: true
@@ -26,16 +26,99 @@ toc: true
 ```{r}
 #| label: load-packages-r
 #| message: false
-# add code to load packages in R here
+
+library(tidyverse)
+library(ggthemes)
 ```
 
 ```{r}
 #| label: load-data-r
 #| message: false
-# add code to read data in R here
+
+whr <- read_csv("data/whr.csv")
 ```
 
-Add code cells and narrative as needed.
+```{r}
+#| label: q2-1
+#| message: false
+
+whr_2025 <- whr |>
+  filter(year == 2025)
+
+leader_countries <- bind_rows(
+  whr_2025 |> slice_max(explained_by_log_gdp_per_capita, n = 1),
+  whr_2025 |> slice_max(explained_by_social_support, n = 1),
+  whr_2025 |> slice_max(explained_by_healthy_life_expectancy, n = 1),
+  whr_2025 |> slice_max(explained_by_freedom_to_make_life_choices, n = 1),
+  whr_2025 |> slice_max(explained_by_generosity, n = 1),
+  whr_2025 |> slice_max(explained_by_perceptions_of_corruption, n = 1),
+  whr_2025 |> slice_max(dystopia_residual, n = 1)
+) |>
+  distinct(country, .keep_all = TRUE) |>
+  mutate(
+    country = fct_reorder(country, life_eval)
+  )
+
+leaders_long <- leader_countries |>
+  select(
+    country,
+    life_eval,
+    explained_by_log_gdp_per_capita,
+    explained_by_social_support,
+    explained_by_healthy_life_expectancy,
+    explained_by_freedom_to_make_life_choices,
+    explained_by_generosity,
+    explained_by_perceptions_of_corruption,
+    dystopia_residual
+  ) |>
+  pivot_longer(
+    cols = explained_by_log_gdp_per_capita:dystopia_residual,
+    names_to = "component",
+    values_to = "value"
+  ) |>
+  mutate(
+    component = recode(
+      component,
+      explained_by_log_gdp_per_capita = "Log GDP per capita",
+      explained_by_social_support = "Social support",
+      explained_by_healthy_life_expectancy = "Healthy life expectancy",
+      explained_by_freedom_to_make_life_choices = "Freedom to make life choices",
+      explained_by_generosity = "Generosity",
+      explained_by_perceptions_of_corruption = "Perceptions of corruption",
+      dystopia_residual = "Dystopia + residual"
+    )
+  )
+
+ggplot(leaders_long, aes(x = value, y = country, fill = component)) +
+  geom_col() +
+  scale_x_continuous(
+    limits = c(-0.3, NA)
+  ) +
+  scale_fill_colorblind() +
+  labs(
+    title = "How happiness is composed for countries leading in key happiness components in the year 2025",
+    subtitle = "Each country leads overall in one explanatory compnent of happiness for the year 2025",
+    x = "Contribution to life evaluation score",
+    y = NULL,
+    fill = "Component",
+    caption = "Source: World Happiness Report 2026"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    legend.position = "bottom"
+  )
+```
+
+The visualization I made zooms ina nd focuses on the countries that lead at least one key explanatory component of happiness in 2025. This visualization, similar to the original, also shows how each country’s life evaluation score is built from those different pieces. It reveals that these countries do not all achieve high happiness in the same way, since some stand out more in areas some components than others, and the visualization helps us see how that contribution is distributed in thse different leaders.
+
+**AI reference disclosure**
+I asked it to help write code to answer the question.
+https://chatgpt.com/share/69e65ddf-abf4-83ea-baa6-272523a5d30d
+
+**Non-AI reference disclosure**
+Figure 2.1 from the report.
 
 ### Question 3
 

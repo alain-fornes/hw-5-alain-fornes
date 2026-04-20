@@ -22,4 +22,6 @@ whr <- whr_raw |>
     dystopia_residual = `Dystopia + residual`
   )
 
+write_csv(whr, "data/whr.csv")
+
 
